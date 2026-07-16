@@ -34,7 +34,7 @@ at which point the **Deep Learning module unlocks**.
 | **[PROGRESS.md](PROGRESS.md)** | The tracker — tick a box every study day, current week marked 👉 |
 | **[guides/](guides/)** | Weekly study guides — the document to follow each day (currently: [Week 1 Python Sprint](guides/week01_python_sprint.md)) |
 | **[docs/evolution_stages.md](docs/evolution_stages.md)** | 🗡️ The character — full pixel-art evolution gallery |
-| **[🌌 Live Quest Graph](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)** | Interactive 3D node map of every task — colored live from PROGRESS.md ([source](docs/index.html)) |
+| **[🌌 Live Quest Graph](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)** | Interactive 3D node map of every task — colored live from PROGRESS.md ([source](docs/quest_graph.html)) |
 
 **Daily rhythm:** study the day's topic → code every exercise yourself → answer
 the day's interview questions out loud → commit & push. The GitHub contribution
