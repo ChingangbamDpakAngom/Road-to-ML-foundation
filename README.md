@@ -33,6 +33,7 @@ at which point the **Deep Learning module unlocks**.
 | **[ROADMAP.md](ROADMAP.md)** | The plan — 14 weeks, 6 phases, and the **Deep Learning Readiness Gate** that must pass before PyTorch |
 | **[PROGRESS.md](PROGRESS.md)** | The tracker — tick a box every study day, current week marked 👉 |
 | **[guides/](guides/)** | Weekly study guides — the document to follow each day (currently: [Week 1 Python Sprint](guides/week01_python_sprint.md)) |
+| **[00_workspace_git/](00_workspace_git/README.md)** | 🧰 Module 0 — workspace & git/GitHub, practiced daily by shipping (no theory week) |
 | **[docs/evolution_stages.md](docs/evolution_stages.md)** | 🗡️ The character — full pixel-art evolution gallery |
 | **[🌌 Live Quest Graph](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)** | Interactive 3D node map of every task — colored live from PROGRESS.md ([source](docs/quest_graph.html)) |
 
@@ -83,7 +84,9 @@ Road-to-ML-foundation/
 ├── PROGRESS.md                    ← the tracker
 ├── guides/                        ← weekly study guides (one added per week)
 │   └── week01_python_sprint.md
+├── 00_workspace_git/              ← Module 0: git/GitHub by daily use
 ├── 01_python_foundations/
+│   ├── scratchpad.ipynb           ← free-experiment lab bench
 │   ├── 01_basics/                 ← Day 1 notebook
 │   ├── 02_data_structures/        ← Day 2 notebook
 │   ├── 03_functions_functional/   ← Day 3 notebook
