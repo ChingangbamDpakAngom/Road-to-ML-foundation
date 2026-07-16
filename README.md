@@ -5,6 +5,8 @@
 ![Journey](https://img.shields.io/badge/🗡️_ASCENT_OF_THE-🟣SHADOW_MONARCH-9B59B6?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Rank-E_·_Beginner-00FF00?style=for-the-badge)
 
+[![Quest Graph](https://img.shields.io/badge/🌌_EXPLORE_THE-LIVE_QUEST_GRAPH-a371f7?style=for-the-badge)](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)
+
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white)
@@ -32,7 +34,7 @@ at which point the **Deep Learning module unlocks**.
 | **[PROGRESS.md](PROGRESS.md)** | The tracker — tick a box every study day, current week marked 👉 |
 | **[guides/](guides/)** | Weekly study guides — the document to follow each day (currently: [Week 1 Python Sprint](guides/week01_python_sprint.md)) |
 | **[docs/evolution_stages.md](docs/evolution_stages.md)** | 🗡️ The character — full pixel-art evolution gallery |
-| **[docs/task_graph.html](docs/task_graph.html)** | 🌌 Interactive 3D quest graph — live node map of every task, colored from PROGRESS.md |
+| **[🌌 Live Quest Graph](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)** | Interactive 3D node map of every task — colored live from PROGRESS.md ([source](docs/index.html)) |
 
 **Daily rhythm:** study the day's topic → code every exercise yourself → answer
 the day's interview questions out loud → commit & push. The GitHub contribution
