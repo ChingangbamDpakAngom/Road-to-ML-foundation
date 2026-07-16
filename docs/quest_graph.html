@@ -689,13 +689,11 @@ cv.addEventListener("pointerdown", e=>{
   else { dragging = true; }
 });
 
-cv.addEventListener("pointermove", e=>{
-  const dx = e.clientX - px, dy = e.clientY - py;
-  if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
-
-  /* Update target coordinates for smooth rAF Lerp loop */
+/* Fairy follows the pointer EVERYWHERE — canvas, legend HUD, panel, header —
+   so she hovers freely instead of freezing at HUD borders. Window-level events
+   fire even when the legend swallows them before the canvas can see them. */
+window.addEventListener("pointermove", e => {
   targetX = e.clientX; targetY = e.clientY;
-
   if (Math.random() > 0.4) {
     pixieDust.push({
       x: e.clientX + (Math.random() - 0.5) * 10, y: e.clientY + (Math.random() - 0.5) * 10,
@@ -704,6 +702,11 @@ cv.addEventListener("pointermove", e=>{
       color: Math.random() > 0.4 ? "#00f0ff" : "#ff3399"
     });
   }
+});
+
+cv.addEventListener("pointermove", e=>{
+  const dx = e.clientX - px, dy = e.clientY - py;
+  if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
 
   if (draggedNode) {
     const p = project(draggedNode), s = Math.max(0.1, p.s);
