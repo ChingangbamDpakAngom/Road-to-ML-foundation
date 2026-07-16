@@ -32,6 +32,7 @@ at which point the **Deep Learning module unlocks**.
 | **[PROGRESS.md](PROGRESS.md)** | The tracker — tick a box every study day, current week marked 👉 |
 | **[guides/](guides/)** | Weekly study guides — the document to follow each day (currently: [Week 1 Python Sprint](guides/week01_python_sprint.md)) |
 | **[docs/evolution_stages.md](docs/evolution_stages.md)** | 🗡️ The character — full pixel-art evolution gallery |
+| **[docs/task_graph.html](docs/task_graph.html)** | 🌌 Interactive 3D quest graph — live node map of every task, colored from PROGRESS.md |
 
 **Daily rhythm:** study the day's topic → code every exercise yourself → answer
 the day's interview questions out loud → commit & push. The GitHub contribution
