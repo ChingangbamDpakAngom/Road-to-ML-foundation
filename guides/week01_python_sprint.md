@@ -21,15 +21,19 @@
 ## 🗺️ The week at a glance
 
 ```mermaid
-flowchart LR
-    D1["Day 1 🔤<br>Basics & control flow"] --> D2["Day 2 📦<br>Data structures"]
-    D2 --> D3["Day 3 🔧<br>Functions deep-dive"]
-    D3 --> D4{"Day 4 🏛️ OOP<br>CHECKPOINT"}
-    D4 -->|"on pace"| D5["Day 5 ✨<br>Decorators & generators"]
-    D4 -->|"> 1 day behind"| FB["🔄 Switch to 2-week pace<br>(no shame — plan absorbs it)"]
-    D5 --> D6["Day 6 📁<br>Files, errors, type hints"]
-    D6 --> D7["Day 7 🏗️<br>PROJECT: Task Manager"]
-    D7 --> UP["🟦 Stage 1: AWAKENED<br>→ Week 2: NumPy"]
+flowchart TB
+    subgraph r1 [" "]
+        direction LR
+        D1["Day 1 🔤<br>Basics"] --> D2["Day 2 📦<br>Data structures"] --> D3["Day 3 🔧<br>Functions"] --> D4{"Day 4 🏛️<br>OOP · CHECKPOINT"}
+    end
+    subgraph r2 [" "]
+        direction LR
+        D5["Day 5 ✨<br>Decorators<br>& generators"] --> D6["Day 6 📁<br>Files & errors"] --> D7["Day 7 🏗️<br>PROJECT:<br>Task Manager"] --> UP["🟦 AWAKENED<br>→ Week 2: NumPy"]
+    end
+    D4 -->|"on pace"| D5
+    D4 -.->|"behind → 2-week pace"| FB(["🔄 no shame, plan absorbs it"])
+    style r1 fill:none,stroke:none
+    style r2 fill:none,stroke:none
     style D4 fill:#2d1f47,stroke:#a371f7,color:#e6edf3
     style D7 fill:#1a2f1f,stroke:#3fb950,color:#e6edf3
     style FB fill:#2f2318,stroke:#f0883e,color:#e6edf3
