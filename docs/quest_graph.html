@@ -638,6 +638,17 @@ function frame(t){
   cursorY += (targetY - cursorY) * 0.45;
   fairyEl.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
 
+  /* Anchor the speech bubble ABOVE the hovered node (tracks it live as the
+     graph spins) — hovering from below now reads the same as from the top,
+     and the bubble never covers the node it describes. */
+  if (hoverNode) {
+    const hp = project(hoverNode), hr = hoverNode.r * hp.s;
+    fairyBubble.style.left   = (hp.sx - cursorX - 6) + "px";
+    fairyBubble.style.bottom = (cursorY - hp.sy + hr + 20) + "px";
+  } else {
+    fairyBubble.style.left = "16px"; fairyBubble.style.bottom = "22px";
+  }
+
   physics(t); draw(t);
   requestAnimationFrame(frame);
 }
