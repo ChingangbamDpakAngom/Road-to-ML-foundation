@@ -3,124 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🗡️ Shadow Monarch — Quest Graph</title>
+<title>> ATHOI // ASCENT OF THE SHADOW MONARCH.graph</title>
 <style>
-  :root{
-    --bg:#0a0d16; --surface:#11151f; --line:#1e2430;
-    --ink:#e6edf3; --ink-2:#9aa4b2; --ink-3:#6e7681;
-    --done:#3fb950; --current:#a371f7; --pending:#7d8590; --locked:#30363d;
-    --accent:#a371f7;
+  :root {
+    --bg: #05070c;
+    --surface: rgba(13, 18, 28, 0.88);
+    --line: #1e293b;
+    --ink: #e2e8f0;
+    --ink-2: #94a3b8;
+    --ink-3: #475569;
+    --done: #00ff66;       /* Neon Green */
+    --current: #00f0ff;    /* Aurora Cyan */
+    --pending: #a6f9ff;    /* Bright Ice Crystal Light Cyan */
+    --locked: #e2e8f0;     /* Shimmering Frost Pearl Silver */
+    --accent: #00f0ff;
+    --neon-glow: 0 0 18px rgba(0, 240, 255, 0.7);
   }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%;overflow:hidden}
-  body{background:var(--bg);color:var(--ink);
-       font:14px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif}
-  canvas{display:block;cursor:grab}
-  canvas.dragging{cursor:grabbing}
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; cursor: none !important; }
+  
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+  }
 
-  header{position:fixed;top:0;left:0;right:0;z-index:5;pointer-events:none;
-         padding:14px 18px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;
-         background:linear-gradient(180deg,rgba(10,13,22,.92),rgba(10,13,22,0))}
-  h1{font-size:17px;font-weight:700;letter-spacing:.3px}
-  h1 .sub{color:var(--ink-2);font-weight:400;font-size:13px;margin-left:8px}
-  #stats{display:flex;gap:14px;font-size:12.5px;color:var(--ink-2)}
-  #stats b{color:var(--ink);font-variant-numeric:tabular-nums}
-  #src{font-size:11px;color:var(--ink-3);border:1px solid var(--line);
-       border-radius:20px;padding:1px 9px}
-  #src.live{color:#7ee38a;border-color:#274a30}
+  #graph-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-image: radial-gradient(rgba(30, 41, 59, 0.4) 1px, transparent 1px);
+    background-size: 30px 30px;
+    cursor: none !important;
+  }
 
-  #legend{position:fixed;left:18px;bottom:16px;z-index:5;display:flex;gap:14px;
-          font-size:12px;color:var(--ink-2);background:rgba(17,21,31,.85);
-          border:1px solid var(--line);border-radius:10px;padding:8px 14px}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;
-       vertical-align:baseline}
-  #hint{position:fixed;right:18px;bottom:16px;z-index:5;font-size:11.5px;color:var(--ink-3)}
+  canvas#cv { display: block; width: 100%; height: 100%; cursor: none !important; }
 
-  #tip{position:fixed;z-index:6;pointer-events:none;display:none;max-width:240px;
-       background:rgba(17,21,31,.96);border:1px solid var(--line);border-radius:8px;
-       padding:7px 11px;font-size:12.5px;box-shadow:0 6px 24px rgba(0,0,0,.5)}
-  #tip .t{font-weight:600}
-  #tip .s{color:var(--ink-2);font-size:11.5px}
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5; pointer-events: none;
+    padding: 16px 22px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: baseline;
+    background: linear-gradient(180deg, rgba(5, 7, 12, 0.95), rgba(5, 7, 12, 0));
+    border-bottom: 1px solid rgba(30, 41, 59, 0.3);
+  }
+  
+  h1 { font-size: 16px; font-weight: 700; color: #fff; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); letter-spacing: 1px; }
+  h1 .sub { color: var(--accent); font-weight: 400; font-size: 12px; margin-left: 10px; text-shadow: var(--neon-glow); }
+  
+  #stats { display: flex; gap: 16px; font-size: 12px; color: var(--ink-2); background: rgba(13, 18, 28, 0.6); padding: 4px 12px; border-radius: 4px; border: 1px solid var(--line); pointer-events: auto; }
+  #stats b { color: #fff; font-variant-numeric: tabular-nums; }
+  
+  #src { font-size: 11px; color: var(--ink-3); border: 1px solid var(--line); border-radius: 4px; padding: 2px 10px; background: rgba(13, 18, 28, 0.8); }
+  #src.live { color: var(--done); border-color: rgba(0, 255, 102, 0.3); box-shadow: 0 0 8px rgba(0, 255, 102, 0.2); }
 
-  #panel{position:fixed;top:64px;right:14px;z-index:6;width:270px;display:none;
-         background:rgba(17,21,31,.97);border:1px solid var(--line);border-radius:12px;
-         padding:16px;box-shadow:0 10px 40px rgba(0,0,0,.6)}
-  #panel h2{font-size:15px;margin-bottom:2px}
-  #panel .badge{display:inline-block;font-size:11px;font-weight:600;border-radius:20px;
-                padding:1px 10px;margin:6px 0 10px}
-  #panel p{color:var(--ink-2);font-size:12.5px;margin-bottom:10px}
-  #panel a{color:var(--accent);font-size:12.5px;text-decoration:none}
-  #panel a:hover{text-decoration:underline}
-  #panel .x{position:absolute;top:8px;right:12px;cursor:pointer;color:var(--ink-3);
-            font-size:16px;border:none;background:none}
-  #panel .x:hover{color:var(--ink)}
-  @media (max-width:600px){
-    #legend{left:10px;right:10px;bottom:10px;justify-content:space-between;gap:6px;
-            font-size:10.5px;padding:6px 8px}
-    #hint{display:none}
-    #panel{width:calc(100vw - 28px)}
+  /* 3D Glowing Crystal HUD Legend */
+  #legend-hud {
+    position: fixed; left: 22px; bottom: 22px; z-index: 50; display: flex; gap: 12px;
+    background: var(--surface); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 10px;
+    padding: 10px 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+    pointer-events: auto;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid transparent;
+    transition: all 0.2s ease; cursor: none !important;
+  }
+  .legend-item:hover {
+    background: rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5);
+    transform: translateY(-2px); box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+  }
+  .legend-item.active-filter {
+    background: rgba(0, 240, 255, 0.2); border-color: #00f0ff;
+    box-shadow: 0 0 20px #00f0ff;
+  }
+  .legend-canvas { width: 32px; height: 32px; pointer-events: none; }
+  .legend-label { font-size: 11px; font-weight: 700; color: var(--ink); letter-spacing: 0.5px; pointer-events: none; }
+
+  #hint { position: fixed; right: 22px; bottom: 22px; z-index: 5; font-size: 11px; color: var(--ink-3); letter-spacing: 0.5px; pointer-events: none; }
+
+  /* Hardware-Accelerated Sprite Fairy Cursor */
+  #fairy-cursor {
+    position: fixed; top: 0; left: 0; z-index: 1000; pointer-events: none;
+    will-change: transform; transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .fairy-head {
+    width: 6px; height: 6px; border-radius: 50%; background: #ffffff;
+    box-shadow: 0 0 8px #ffffff, 0 0 15px #00f0ff, 0 0 25px #ff3399;
+    animation: fairyPulse 1.2s infinite alternate;
+  }
+  .fairy-torso {
+    width: 3px; height: 9px; border-radius: 2px;
+    background: linear-gradient(to bottom, #ffffff, #00f0ff);
+    margin-top: -1px; box-shadow: 0 0 10px #00f0ff;
+  }
+  .wing-upper {
+    position: absolute; top: -4px; width: 16px; height: 8px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(0,240,255,0.45));
+    border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+  }
+  .wing-upper.left { right: 3px; border-radius: 80% 0 20% 60%; transform-origin: right bottom; animation: flapUpperLeft 0.12s infinite alternate ease-in-out; }
+  .wing-upper.right { left: 3px; border-radius: 0 80% 60% 20%; transform-origin: left bottom; animation: flapUpperRight 0.12s infinite alternate ease-in-out; }
+  
+  .wing-lower {
+    position: absolute; top: 3px; width: 10px; height: 6px;
+    background: linear-gradient(135deg, rgba(255,51,153,0.6), rgba(255,255,255,0.7));
+    border: 1px solid rgba(255, 180, 230, 0.8); box-shadow: 0 0 8px rgba(255, 51, 153, 0.5);
+  }
+  .wing-lower.left { right: 2px; border-radius: 50% 0 30% 70%; transform-origin: right top; animation: flapLowerLeft 0.12s infinite alternate ease-in-out; }
+  .wing-lower.right { left: 2px; border-radius: 0 50% 70% 30%; transform-origin: left top; animation: flapLowerRight 0.12s infinite alternate ease-in-out; }
+
+  @keyframes flapUpperLeft { 0% { transform: rotate(-10deg) scaleY(0.7) rotateY(0deg); } 100% { transform: rotate(-45deg) scaleY(1.1) rotateY(40deg); } }
+  @keyframes flapUpperRight { 0% { transform: rotate(10deg) scaleY(0.7) rotateY(0deg); } 100% { transform: rotate(45deg) scaleY(1.1) rotateY(40deg); } }
+  @keyframes flapLowerLeft { 0% { transform: rotate(-15deg) scaleY(0.8); } 100% { transform: rotate(-35deg) scaleY(1.0); } }
+  @keyframes flapLowerRight { 0% { transform: rotate(15deg) scaleY(0.8); } 100% { transform: rotate(35deg) scaleY(1.0); } }
+  @keyframes fairyPulse { 0% { transform: scale(0.9); filter: brightness(1); } 100% { transform: scale(1.2); filter: brightness(1.4); } }
+
+  /* Fairy Speech Bubble Tooltip */
+  #fairy-bubble {
+    position: absolute; bottom: 22px; left: 16px; width: max-content; max-width: 280px;
+    background: rgba(10, 14, 23, 0.95); border: 1px solid #00f0ff; border-radius: 8px;
+    padding: 8px 12px; font-size: 11.5px; color: #fff; line-height: 1.4;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); backdrop-filter: blur(6px);
+    display: none; transform: translateY(5px); animation: bubblePop 0.2s forwards ease-out;
+  }
+  #fairy-bubble::after {
+    content: ''; position: absolute; bottom: -6px; left: 12px; width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #00f0ff;
+  }
+  @keyframes bubblePop { to { transform: translateY(0); opacity: 1; } }
+
+  #panel {
+    position: fixed; top: 70px; right: 22px; z-index: 6; width: 340px; display: none;
+    background: var(--surface); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 8px;
+    padding: 20px; box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px);
+    cursor: default; pointer-events: auto;
+  }
+  #panel h2 { font-size: 16px; color: #fff; margin-bottom: 6px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  #panel .badge { display: inline-block; font-size: 10px; font-weight: 700; border-radius: 4px; padding: 3px 8px; margin: 10px 0; letter-spacing: 1px; text-transform: uppercase; }
+  #panel p { color: var(--ink-2); font-size: 12px; margin-bottom: 16px; line-height: 1.6; }
+  #panel a {
+    display: inline-block; color: #000; background: var(--current); font-weight: 700;
+    font-size: 11px; text-decoration: none; padding: 8px 14px; border-radius: 4px;
+    transition: all 0.2s ease; box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); cursor: none;
+  }
+  #panel a:hover { background: #fff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
+  #panel .x { position: absolute; top: 12px; right: 16px; cursor: none; color: var(--ink-3); font-size: 16px; border: none; background: none; font-family: monospace; }
+  #panel .x:hover { color: #fff; }
+  
+  @media (max-width: 750px) {
+    #legend-hud { left: 10px; right: 10px; bottom: 10px; flex-wrap: wrap; justify-content: space-between; gap: 6px; padding: 8px; }
+    #hint { display: none; }
+    #panel { width: calc(100vw - 20px); right: 10px; top: 60px; }
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>🗡️ Quest Graph<span class="sub">Road to ML Foundation</span></h1>
-  <div id="stats">
-    <span>Weeks <b id="stW">–</b></span>
-    <span>Week-1 days <b id="stD">–</b></span>
-    <span>Overall <b id="stP">–</b></span>
-  </div>
-  <span id="src">loading…</span>
-</header>
 
-<div id="legend">
-  <span><span class="dot" style="background:var(--done)"></span>✓ done</span>
-  <span><span class="dot" style="background:var(--current);box-shadow:0 0 6px var(--current)"></span>current</span>
-  <span><span class="dot" style="background:var(--pending)"></span>pending</span>
-  <span><span class="dot" style="background:var(--locked);outline:1px solid #484f58"></span>🔒 locked</span>
+<div id="graph-wrapper">
+  <header>
+    <h1>> ASCENT OF THE SHADOW MONARCH<span class="sub">[ROAD TO ML FOUNDATION // LIVE]</span></h1>
+    <div id="stats">
+      <span>WEEKS: <b id="stW">–</b></span>
+      <span>DAY_1: <b id="stD">–</b></span>
+      <span>SYNC: <b id="stP">–</b></span>
+    </div>
+    <span id="src">INIT_NETWORK...</span>
+  </header>
+
+  <div id="legend-hud">
+    <div class="legend-item" id="btn-done" onclick="toggleSpotlight('done')" onmouseenter="hoverLegend('done')" onmouseleave="leaveLegend()">
+      <canvas class="legend-canvas" id="cv-done" width="36" height="36"></canvas>
+      <span class="legend-label" style="color:var(--done)">DONE</span>
+    </div>
+    <div class="legend-item" id="btn-current" onclick="toggleSpotlight('current')" onmouseenter="hoverLegend('current')" onmouseleave="leaveLegend()">
+      <canvas class="legend-canvas" id="cv-current" width="36" height="36"></canvas>
+      <span class="legend-label" style="color:var(--current)">ACTIVE QUEST</span>
+    </div>
+    <div class="legend-item" id="btn-pending" onclick="toggleSpotlight('pending')" onmouseenter="hoverLegend('pending')" onmouseleave="leaveLegend()">
+      <canvas class="legend-canvas" id="cv-pending" width="36" height="36"></canvas>
+      <span class="legend-label" style="color:var(--pending)">PENDING</span>
+    </div>
+    <div class="legend-item" id="btn-locked" onclick="toggleSpotlight('locked')" onmouseenter="hoverLegend('locked')" onmouseleave="leaveLegend()">
+      <canvas class="legend-canvas" id="cv-locked" width="36" height="36"></canvas>
+      <span class="legend-label" style="color:var(--locked)">LOCKED</span>
+    </div>
+  </div>
+
+  <div id="hint">[CLICK LEGEND: SPOTLIGHT FILTER] // [DRAG: STRETCH] // [ROTATE: BG]</div>
+  
+  <div id="fairy-cursor">
+    <div class="wing-upper left"></div>
+    <div class="wing-upper right"></div>
+    <div class="wing-lower left"></div>
+    <div class="wing-lower right"></div>
+    <div class="fairy-head"></div>
+    <div class="fairy-torso"></div>
+    <div id="fairy-bubble"></div>
+  </div>
+  
+  <div id="panel">
+    <button class="x" onclick="document.getElementById('panel').style.display='none'">[X]</button>
+    <h2 id="pTitle"></h2>
+    <span class="badge" id="pBadge"></span>
+    <p id="pDesc"></p>
+    <a id="pLink" target="_blank" rel="noopener">OPEN_REPOSITORY >></a>
+  </div>
+  
+  <canvas id="cv"></canvas>
 </div>
-<div id="hint">drag rotate · scroll zoom · click a node</div>
-<div id="tip"></div>
-<div id="panel">
-  <button class="x" onclick="panel.style.display='none'">✕</button>
-  <h2 id="pTitle"></h2>
-  <span class="badge" id="pBadge"></span>
-  <p id="pDesc"></p>
-  <a id="pLink" target="_blank" rel="noopener"></a>
-</div>
-<canvas id="cv"></canvas>
 
 <script>
 "use strict";
-/* ────────────────────────── quest structure ────────────────────────── */
+/* ────────────────────────── Quest Architecture ────────────────────────── */
 const REPO = "https://github.com/ChingangbamDpakAngom/Road-to-ML-foundation";
 const RAW  = "https://raw.githubusercontent.com/ChingangbamDpakAngom/Road-to-ML-foundation/main/PROGRESS.md";
 
 const PHASES = [
-  {id:"p1", name:"Python",           ring:"#58a6ff", weeks:[1]},
-  {id:"p2", name:"Data Stack",       ring:"#bc8cff", weeks:[2,3,4]},
-  {id:"p3", name:"Math for ML",      ring:"#e3b341", weeks:[5,6]},
-  {id:"p4", name:"Machine Learning", ring:"#ff7b72", weeks:[7,8,9]},
-  {id:"p5", name:"Job-Ready",        ring:"#f0883e", weeks:[10,11]},
-  {id:"p6", name:"Bridge to DL",     ring:"#39d2c0", weeks:[12,13]},
+  {id:"p1", name:"Python Core",      ring:"#00f0ff", weeks:[1]},
+  {id:"p2", name:"Data Stack",       ring:"#b829ff", weeks:[2,3,4]},
+  {id:"p3", name:"Math for ML",      ring:"#ffaa00", weeks:[5,6]},
+  {id:"p4", name:"Machine Learning", ring:"#ff3399", weeks:[7,8,9]},
+  {id:"p5", name:"Job-Ready",        ring:"#00ff66", weeks:[10,11]},
+  {id:"p6", name:"Bridge to DL",     ring:"#00f0ff", weeks:[12,13]},
 ];
-const WEEK_NAMES = {1:"Python Sprint",2:"NumPy",3:"Pandas",4:"Visualization · Capstone 1",
-  5:"Linear Algebra",6:"Calculus + Probability",7:"Regression",8:"Classifiers",
-  9:"Unsupervised + Evaluation",10:"SQL",11:"Capstone 2 🏆",12:"From-Scratch Neural Net",
-  13:"Interview Prep"};
-const DAY_NAMES = ["Setup · variables · control flow","Data structures + comprehensions",
-  "Functions & functional Python","OOP — bank account system","Decorators & generators",
-  "Files · exceptions · type hints","Project: CLI Task Manager"];
+const WEEK_NAMES = {
+  1:"Python Sprint", 2:"NumPy", 3:"Pandas", 4:"Visualization · Capstone 1",
+  5:"Linear Algebra", 6:"Calculus + Probability", 7:"Regression", 8:"Classifiers",
+  9:"Unsupervised + Evaluation", 10:"SQL", 11:"Capstone 2 🏆", 12:"From-Scratch Neural Net",
+  13:"Interview Prep"
+};
+const DAY_NAMES = [
+  "Setup · variables · control flow", "Data structures + comprehensions",
+  "Functions & functional Python", "OOP — bank account system", "Decorators & generators",
+  "Files · exceptions · type hints", "Project: CLI Task Manager"
+];
 const GUIDE1 = REPO + "/blob/main/guides/week01_python_sprint.md";
 
-/* ─────────────────────── progress (live fetch) ─────────────────────── */
-const progress = {weeks:{}, days:{}, currentWeek:1};   // false=pending true=done
+const progress = {weeks:{}, days:{}, currentWeek:1};
 for (let w=1; w<=13; w++) progress.weeks[w] = false;
 for (let d=1; d<=7;  d++) progress.days[d]  = false;
 
 async function loadProgress(){
   const srcEl = document.getElementById("src");
-  try{
+  try {
     const md = await (await fetch(RAW + "?t=" + Date.now())).text();
     let m;
     const wRe = /^- \[([ x])\] \*\*Week (\d+)/gm;
@@ -130,9 +258,9 @@ async function loadProgress(){
     const cw = md.match(/👉 Week (\d+)/);
     if (cw) progress.currentWeek = +cw[1];
     if (Object.values(progress.days).every(v=>v)) progress.weeks[1] = true;
-    srcEl.textContent = "● live from GitHub"; srcEl.className = "live";
-  }catch(e){
-    srcEl.textContent = "offline snapshot";
+    srcEl.textContent = "● GITHUB_SYNCED"; srcEl.className = "live";
+  } catch(e) {
+    srcEl.textContent = "○ OFFLINE_MODE";
   }
   applyStatus(); updateStats();
 }
@@ -153,44 +281,62 @@ function phaseStatus(p){
   return "pending";
 }
 
-/* ──────────────────────────── graph model ──────────────────────────── */
 const nodes = [], edges = [], byId = {};
 function addNode(n){
-  n.x=(Math.random()-.5)*40; n.y=(Math.random()-.5)*40; n.z=(Math.random()-.5)*40;
-  n.vx=n.vy=n.vz=0; n.seed=Math.random()*Math.PI*2;
-  nodes.push(n); byId[n.id]=n; return n;
+  n.x = (Math.random()-.5)*45; n.y = (Math.random()-.5)*45; n.z = (Math.random()-.5)*45;
+  n.vx = n.vy = n.vz = 0; n.seed = Math.random()*Math.PI*2; n.isDragging = false;
+  nodes.push(n); byId[n.id] = n; return n;
 }
 function addEdge(a,b,rest){ edges.push({a:byId[a], b:byId[b], rest}); }
 
-addNode({id:"center", type:"center", r:24, label:"Shadow Monarch",
-         desc:"The journey itself. Every phase completed evolves the Monarch.",
-         link:REPO, status:"current", fixed:true});
+addNode({
+  id:"center", type:"center", r:28, label:"Ascent of the Shadow Monarch — Road to ML Foundation",
+  desc:"The core knowledge nexus of your ML journey. Every completed quest module evolves your computational foundation.",
+  summary:"👑 Ascent of the Shadow Monarch — Road to ML Foundation! All machine learning knowledge converges and grows from this root nexus!",
+  link:REPO, status:"current", fixed:true
+});
 
 for (const p of PHASES){
-  addNode({id:p.id, type:"phase", r:14, label:p.name, ring:p.ring,
-           desc:"Phase hub — " + p.weeks.length + " week(s).", link:REPO+"/blob/main/ROADMAP.md",
-           status:"pending"});
-  addEdge("center", p.id, 165);
+  addNode({
+    id:p.id, type:"phase", r:15, label:p.name, ring:p.ring,
+    desc:"Phase Nexus — Contains " + p.weeks.length + " specialized training week(s).",
+    summary:`⚡ Phase Hub: ${p.name}! Contains ${p.weeks.length} intensive training week(s) to master.`,
+    link:REPO+"/blob/main/ROADMAP.md", status:"pending"
+  });
+  addEdge("center", p.id, 170);
   for (const w of p.weeks){
-    addNode({id:"w"+w, type:"week", r:9.5, label:"W"+w+" · "+WEEK_NAMES[w],
-             desc:"Week "+w+" — "+WEEK_NAMES[w],
-             link: w===1 ? GUIDE1 : REPO+"/blob/main/ROADMAP.md", status:"pending"});
-    addEdge(p.id, "w"+w, 78);
+    addNode({
+      id:"w"+w, type:"week", r:10, label:"W"+w+" · "+WEEK_NAMES[w],
+      desc:"Week "+w+" Architecture: "+WEEK_NAMES[w],
+      summary:`📖 Week ${w} Quest: ${WEEK_NAMES[w]}. Click me to inspect the curriculum!`,
+      link: w===1 ? GUIDE1 : REPO+"/blob/main/ROADMAP.md", status:"pending"
+    });
+    addEdge(p.id, "w"+w, 80);
   }
 }
 for (let d=1; d<=7; d++){
-  addNode({id:"d"+d, type:"day", r:6.5, label:"Day "+d,
-           desc:"Day "+d+": "+DAY_NAMES[d-1], link:GUIDE1, status:"pending"});
-  addEdge("w1", "d"+d, 46);
+  addNode({
+    id:"d"+d, type:"day", r:7, label:"Day "+d,
+    desc:"Day "+d+" Execution: "+DAY_NAMES[d-1],
+    summary:`⚔️ Daily Task: Day ${d} (${DAY_NAMES[d-1]}). Complete this to build momentum!`,
+    link:GUIDE1, status:"pending"
+  });
+  addEdge("w1", "d"+d, 48);
 }
-addNode({id:"gate", type:"gate", r:11, label:"Readiness Gate",
-         desc:"8-item checklist in ROADMAP.md — pass it to unlock Deep Learning.",
-         link:REPO+"/blob/main/ROADMAP.md#-deep-learning-readiness-gate", status:"pending"});
+addNode({
+  id:"gate", type:"gate", r:12, label:"Readiness Gate",
+  desc:"8-parameter verification checkpoint. Complete to unlock neural network architectures.",
+  summary:"🛡️ The Readiness Gate! Pass all 8 core checkpoints here to unlock Deep Learning!",
+  link:REPO+"/blob/main/ROADMAP.md#-deep-learning-readiness-gate", status:"pending"
+});
 addEdge("w13","gate",95);
-addNode({id:"dl", type:"dl", r:15, label:"🧠 Deep Learning",
-         desc:"PyTorch · neural nets · the next module. Locked until the Gate opens.",
-         link:REPO+"/blob/main/ROADMAP.md", status:"locked"});
-addEdge("gate","dl",110);
+addNode({
+  id:"dl", type:"dl", r:16, label:"🧠 Deep Learning",
+  desc:"PyTorch · Neural Architectures · Advanced AI systems. Currently locked behind Readiness Gate.",
+  summary:"🧠 Deep Learning Sanctuary! Highly advanced neural networks reside here. Unlock the gate first!",
+  link:REPO+"/blob/main/ROADMAP.md", status:"locked"
+});
+addEdge("gate","dl",115);
 
 function applyStatus(){
   for (const p of PHASES) byId[p.id].status = phaseStatus(p);
@@ -209,29 +355,35 @@ function updateStats(){
   document.getElementById("stP").textContent = Math.round(100*doneUnits/total) + "%";
 }
 
-/* ─────────────────────────── 3-D engine ────────────────────────────── */
+/* ─────────────────────────── 3D Engine & Optimizations ────────────────────────────── */
 const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
-const tip = document.getElementById("tip"), panel = document.getElementById("panel");
+const panel = document.getElementById("panel");
 let W, H, DPR;
 function resize(){
   DPR = Math.min(devicePixelRatio||1, 2);
   W = innerWidth; H = innerHeight;
   cv.width = W*DPR; cv.height = H*DPR;
-  cv.style.width = W+"px"; cv.style.height = H+"px";
   ctx.setTransform(DPR,0,0,DPR,0,0);
 }
 addEventListener("resize", resize); resize();
 
-const stars = Array.from({length:130}, () => ({
-  x:Math.random()*2-1, y:Math.random()*2-1, r:Math.random()*1.1+.3, tw:Math.random()*Math.PI*2}));
+/* Reduced Snowflake count slightly for maximum FPS */
+const snowflakes = Array.from({length: 160}, () => ({
+  x: (Math.random() - 0.5) * 400, y: (Math.random() - 0.5) * 400, z: (Math.random() - 0.5) * 400,
+  size: Math.random() * 3 + 1.5, speedY: Math.random() * 0.35 + 0.15,
+  speedAngle: Math.random() * 0.015 - 0.0075, angle: Math.random() * Math.PI * 2,
+  hueOffset: Math.random() * 80 - 40, crystalType: Math.floor(Math.random() * 3)
+}));
 
-let rotY = .6, rotX = -.28, zoom = 1, autoSpin = true;
+const pixieDust = [];
+let rotY = 0.6, rotX = -0.28, zoom = 1, autoSpin = true;
 const FOV = 640;
+let activeSpotlight = null;
 
-function project(n){
+function project(pos){
   const cy=Math.cos(rotY), sy=Math.sin(rotY), cx=Math.cos(rotX), sx=Math.sin(rotX);
-  const x1 = n.x*cy + n.z*sy, z1 = -n.x*sy + n.z*cy;
-  const y2 = n.y*cx - z1*sx,  z2 =  n.y*sx + z1*cx;
+  const x1 = pos.x*cy + pos.z*sy, z1 = -pos.x*sy + pos.z*cy;
+  const y2 = pos.y*cx - z1*sx,    z2 =  pos.y*sx + z1*cx;
   const s = FOV/(FOV + z2 + 320) * zoom;
   return {sx: W/2 + x1*s, sy: H/2 + y2*s, s, depth: z2};
 }
@@ -239,171 +391,370 @@ function project(n){
 function physics(t){
   for (let i=0;i<nodes.length;i++){
     const a = nodes[i];
-    if (a.fixed){ a.x=a.y=a.z=0; continue; }
+    if (a.fixed && !a.isDragging){ a.x=a.y=a.z=0; continue; }
+    if (a.isDragging) continue;
+
     for (let j=i+1;j<nodes.length;j++){
       const b = nodes[j];
       let dx=a.x-b.x, dy=a.y-b.y, dz=a.z-b.z;
       let d2 = dx*dx+dy*dy+dz*dz + 0.01, d = Math.sqrt(d2);
-      const f = Math.min(2600/d2, 6)/d;
+      const f = Math.min(2800/d2, 6)/d;
       a.vx+=dx*f; a.vy+=dy*f; a.vz+=dz*f;
-      if(!b.fixed){ b.vx-=dx*f; b.vy-=dy*f; b.vz-=dz*f; }
+      if(!b.fixed && !b.isDragging){ b.vx-=dx*f; b.vy-=dy*f; b.vz-=dz*f; }
     }
-    // gentle centering + perpetual drift so the constellation never freezes
-    a.vx -= a.x*.0012; a.vy -= a.y*.0012; a.vz -= a.z*.0012;
-    a.vx += Math.sin(t*.00045 + a.seed)*.012;
-    a.vy += Math.cos(t*.00038 + a.seed*1.7)*.012;
+    a.vx -= a.x*.0015; a.vy -= a.y*.0015; a.vz -= a.z*.0015;
+    a.vx += Math.sin(t*.00045 + a.seed)*.015;
+    a.vy += Math.cos(t*.00038 + a.seed*1.7)*.015;
   }
+  
   for (const e of edges){
     const dx=e.b.x-e.a.x, dy=e.b.y-e.a.y, dz=e.b.z-e.a.z;
-    const d = Math.sqrt(dx*dx+dy*dy+dz*dz)+.001, f = (d-e.rest)*.02/d;
-    if(!e.a.fixed){ e.a.vx+=dx*f; e.a.vy+=dy*f; e.a.vz+=dz*f; }
-    if(!e.b.fixed){ e.b.vx-=dx*f; e.b.vy-=dy*f; e.b.vz-=dz*f; }
+    const d = Math.sqrt(dx*dx+dy*dy+dz*dz)+.001;
+    const f = (d-e.rest)*.028/d;
+    if(!e.a.fixed && !e.a.isDragging){ e.a.vx+=dx*f; e.a.vy+=dy*f; e.a.vz+=dz*f; }
+    if(!e.b.fixed && !e.b.isDragging){ e.b.vx-=dx*f; e.b.vy-=dy*f; e.b.vz-=dz*f; }
   }
+  
   for (const n of nodes){
-    if (n.fixed) continue;
-    n.vx*=.88; n.vy*=.88; n.vz*=.88;
+    if (n.fixed && !n.isDragging) continue;
+    if (n.isDragging) continue;
+    n.vx*=.85; n.vy*=.85; n.vz*=.85;
     n.x+=n.vx; n.y+=n.vy; n.z+=n.vz;
+  }
+
+  for (const p of snowflakes){
+    const dist = Math.hypot(p.x, p.z);
+    p.angle += p.speedAngle;
+    p.x = dist * Math.cos(p.angle);
+    p.z = dist * Math.sin(p.angle);
+    p.y += p.speedY;
+    if (p.y > 200) p.y = -200;
+  }
+  
+  for (let i = pixieDust.length - 1; i >= 0; i--) {
+    const pd = pixieDust[i];
+    pd.x += pd.vx; pd.y += pd.vy; pd.life -= 0.035;
+    if (pd.life <= 0) pixieDust.splice(i, 1);
   }
 }
 
-const COLORS = {done:"#3fb950", current:"#a371f7", pending:"#7d8590", locked:"#30363d"};
+/* ─────────────────────────── CACHED 3D Legend Rendering ───────────────────────────── */
+const LEGEND_CONFIG = {
+  done:    { color: "#00ff66", shape: "diamond", desc: "✓ COMPLETED: Foundational ML modules successfully mastered!" },
+  current: { color: "#00f0ff", shape: "ring",    desc: "▶ ACTIVE QUEST: Your current Bankai training focus. Channel all energy here!" },
+  pending: { color: "#a6f9ff", shape: "hex",     desc: "… PENDING: Luminous crystal nodes awaiting activation as your journey unfolds." },
+  locked:  { color: "#e2e8f0", shape: "sphere",  desc: "🔒 LOCKED: Advanced neural sanctuaries sealed behind Readiness Gates." }
+};
+
+/* Cache DOM Canvas contexts ONCE to prevent 240 DOM queries per second! */
+const legendContexts = {};
+Object.keys(LEGEND_CONFIG).forEach(key => {
+  const el = document.getElementById(`cv-${key}`);
+  if (el) legendContexts[key] = { ctx: el.getContext("2d"), w: el.width, h: el.height };
+});
+
+function renderLegendCrystals(t) {
+  Object.keys(LEGEND_CONFIG).forEach((key, idx) => {
+    const cached = legendContexts[key];
+    if (!cached) return;
+    const { ctx: lctx, w, h } = cached;
+    lctx.clearRect(0, 0, w, h);
+    
+    lctx.save();
+    lctx.translate(w/2, h/2);
+    const cfg = LEGEND_CONFIG[key];
+    
+    /* Stripped heavy shadowBlur from inactive rotation to preserve 60 FPS */
+    if (activeSpotlight === key || hoverLegendKey === key) {
+      lctx.shadowColor = cfg.color; lctx.shadowBlur = 12;
+    } else {
+      lctx.shadowBlur = 0;
+    }
+    
+    lctx.strokeStyle = cfg.color; lctx.fillStyle = cfg.color; lctx.lineWidth = 1.8;
+    const angle = t * 0.003 + idx * 1.5;
+    const r = 9;
+    
+    if (cfg.shape === "diamond") {
+      lctx.rotate(angle);
+      lctx.beginPath();
+      lctx.moveTo(0, -r); lctx.lineTo(r*.7, 0); lctx.lineTo(0, r); lctx.lineTo(-r*.7, 0);
+      lctx.closePath(); lctx.globalAlpha = 0.75; lctx.fill(); lctx.globalAlpha = 1; lctx.stroke();
+    } else if (cfg.shape === "ring") {
+      lctx.beginPath(); lctx.ellipse(0, 0, r*1.2, r*0.5, angle, 0, Math.PI*2); lctx.stroke();
+      lctx.beginPath(); lctx.arc(0, 0, r*0.4, 0, Math.PI*2); lctx.fill();
+    } else if (cfg.shape === "hex") {
+      lctx.rotate(-angle);
+      lctx.beginPath();
+      for(let i=0; i<6; i++){
+        const a = i * Math.PI / 3; const x = Math.cos(a) * r; const y = Math.sin(a) * r * Math.cos(angle * 0.5);
+        if(i===0) lctx.moveTo(x,y); else lctx.lineTo(x,y);
+      }
+      lctx.closePath(); lctx.globalAlpha = 0.65; lctx.fill(); lctx.globalAlpha = 1; lctx.stroke();
+    } else {
+      lctx.beginPath(); lctx.arc(0, 0, r*0.8, 0, Math.PI*2); lctx.globalAlpha = 0.45; lctx.fill();
+      lctx.globalAlpha = 1; lctx.stroke(); lctx.font = "9px monospace"; lctx.fillStyle = "#05070c";
+      lctx.textAlign = "center"; lctx.textBaseline = "middle"; lctx.fillText("🔒", 0, 0);
+    }
+    lctx.restore();
+  });
+}
+
+const COLORS = {
+  done: "#00ff66", current: "#00f0ff", pending: "#a6f9ff", locked: "#e2e8f0"
+};
+
 let hoverNode = null;
+let draggedNode = null;
+let hoverLegendKey = null;
 
 function draw(t){
   ctx.clearRect(0,0,W,H);
-  // starfield
-  for (const s of stars){
-    const a = .25 + .25*Math.sin(t*.001 + s.tw);
-    ctx.fillStyle = "rgba(200,210,255," + a + ")";
-    ctx.fillRect(W/2 + s.x*W/2, H/2 + s.y*H/2, s.r, s.r);
+  renderLegendCrystals(t);
+  
+  const projSnow = snowflakes.map(p => ({...p, proj: project(p)}))
+                             .sort((a, b) => b.proj.depth - a.proj.depth);
+  const baseHue = (t * 0.015) % 360;
+
+  for (const p of projSnow){
+    if (p.proj.s < 0 || p.proj.depth < -300) continue;
+    const size = p.size * p.proj.s;
+    ctx.save();
+    ctx.translate(p.proj.sx, p.proj.sy);
+    
+    const flakeHue = (baseHue + p.hueOffset + 360) % 360;
+    ctx.fillStyle = `hsl(${flakeHue}, 85%, 78%)`;
+    ctx.strokeStyle = `hsl(${flakeHue}, 85%, 78%)`;
+    /* Removed heavy shadowBlur from snowflakes for 60 FPS performance */
+    ctx.globalAlpha = Math.min(1, Math.max(0.15, (p.proj.s * 0.7)));
+
+    ctx.beginPath();
+    if (p.crystalType === 0) {
+      ctx.moveTo(0, -size); ctx.lineTo(size*0.6, 0); ctx.lineTo(0, size); ctx.lineTo(-size*0.6, 0); ctx.closePath(); ctx.fill();
+    } else if (p.crystalType === 1) {
+      for(let i=0; i<6; i++){
+        ctx.moveTo(0,0); ctx.lineTo(Math.cos(i*Math.PI/3)*size*1.3, Math.sin(i*Math.PI/3)*size*1.3);
+      }
+      ctx.lineWidth = 1 * p.proj.s; ctx.stroke();
+    } else {
+      ctx.arc(0, 0, size*0.7, 0, 7); ctx.fill();
+    }
+    ctx.restore();
   }
+
   const proj = new Map();
   for (const n of nodes) proj.set(n, project(n));
 
-  // edges
   for (const e of edges){
     const pa = proj.get(e.a), pb = proj.get(e.b);
     const bothDone = e.a.status==="done" && e.b.status==="done";
     const toCurrent = e.a.status==="current" || e.b.status==="current";
     const depthA = Math.max(.15, Math.min(1, (pa.s+pb.s)/2));
-    ctx.strokeStyle = bothDone ? "rgba(63,185,80,"+(.5*depthA)+")"
-                    : toCurrent ? "rgba(163,113,247,"+(.55*depthA)+")"
-                    : "rgba(110,118,129,"+(.28*depthA)+")";
-    ctx.lineWidth = (bothDone||toCurrent ? 1.4 : .8) * depthA;
+    
+    const isDimmed = activeSpotlight && (e.a.status !== activeSpotlight && e.b.status !== activeSpotlight);
+    const alphaMult = isDimmed ? 0.15 : 1.0;
+
+    const dx = e.b.x - e.a.x, dy = e.b.y - e.a.y, dz = e.b.z - e.a.z;
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const tension = Math.max(0, (dist - e.rest) / e.rest);
+
+    if (tension > 0.3) {
+      ctx.strokeStyle = `hsla(${(baseHue + 180) % 360}, 90%, 65%, ${alphaMult})`;
+      ctx.lineWidth = (bothDone||toCurrent ? 2 : 1.2) * depthA * (1 + tension * 0.6);
+    } else {
+      ctx.strokeStyle = bothDone ? `rgba(0, 255, 102, ${.6 * depthA * alphaMult})`
+                      : toCurrent ? `rgba(0, 240, 255, ${.7 * depthA * alphaMult})`
+                      : `rgba(166, 249, 255, ${.35 * depthA * alphaMult})`;
+      ctx.lineWidth = (bothDone||toCurrent ? 1.8 : 0.9) * depthA;
+    }
     ctx.beginPath(); ctx.moveTo(pa.sx,pa.sy); ctx.lineTo(pb.sx,pb.sy); ctx.stroke();
   }
 
-  // nodes back → front
   const order = [...nodes].sort((a,b)=>proj.get(b).depth - proj.get(a).depth);
   for (const n of order){
     const p = proj.get(n), r = n.r*p.s;
     const col = COLORS[n.status];
-    // pulse ring on current
-    if (n.status==="current"){
-      const pulse = 1 + .35*Math.sin(t*.004 + n.seed);
-      ctx.beginPath(); ctx.arc(p.sx,p.sy, r*1.5*pulse, 0, 7);
-      ctx.strokeStyle = "rgba(163,113,247,.45)"; ctx.lineWidth = 1.6; ctx.stroke();
+    const isDimmed = activeSpotlight && n.status !== activeSpotlight;
+    
+    if (n.status==="current" && !isDimmed){
+      const pulse = 1 + .4*Math.sin(t*.005 + n.seed);
+      ctx.beginPath(); ctx.arc(p.sx,p.sy, r*1.6*pulse, 0, 7);
+      ctx.strokeStyle = "rgba(0, 240, 255, 0.6)"; ctx.lineWidth = 2; ctx.stroke();
     }
+    
     ctx.save();
-    if (n.status==="done" || n.status==="current"){
-      ctx.shadowColor = col; ctx.shadowBlur = 16*p.s;
-    }
+    ctx.shadowColor = col; 
+    ctx.shadowBlur = isDimmed ? 0 : (activeSpotlight === n.status ? 25 * p.s : 14 * p.s);
+    
     ctx.beginPath(); ctx.arc(p.sx,p.sy, r, 0, 7);
-    ctx.fillStyle = col;
-    ctx.globalAlpha = n.status==="pending" ? .8 : 1;
-    ctx.fill(); ctx.restore(); ctx.globalAlpha = 1;
-    // phase ring (thematic identity, hubs are labeled)
-    if (n.ring){
-      ctx.beginPath(); ctx.arc(p.sx,p.sy, r+2.5, 0, 7);
+    ctx.fillStyle = col; ctx.globalAlpha = isDimmed ? 0.2 : 1.0;
+    ctx.fill(); ctx.restore();
+    
+    if (n.ring && !isDimmed){
+      ctx.beginPath(); ctx.arc(p.sx,p.sy, r+3.5, 0, 7);
       ctx.strokeStyle = n.ring; ctx.lineWidth = 1.8; ctx.stroke();
     }
-    if (n === hoverNode){
-      ctx.beginPath(); ctx.arc(p.sx,p.sy, r+5, 0, 7);
-      ctx.strokeStyle = "rgba(230,237,243,.9)"; ctx.lineWidth = 1.4; ctx.stroke();
+    if (n === hoverNode || n === draggedNode){
+      ctx.beginPath(); ctx.arc(p.sx,p.sy, r+6, 0, 7);
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.5; ctx.stroke();
     }
-    // status icons — status is never color-alone
+    
     ctx.textAlign="center"; ctx.textBaseline="middle";
     if (n.status==="done" && r > 4){
-      ctx.fillStyle="#04160a"; ctx.font = "bold "+Math.max(8, r*1.1)+"px sans-serif";
-      ctx.fillText("✓", p.sx, p.sy+.5);
+      ctx.fillStyle="#000000"; ctx.font = "bold "+Math.max(8, r*1.1)+"px monospace";
+      ctx.globalAlpha = isDimmed ? 0.2 : 1.0; ctx.fillText("✓", p.sx, p.sy+.5);
     } else if (n.status==="locked"){
-      ctx.font = Math.max(9, r*1.0)+"px sans-serif"; ctx.fillText("🔒", p.sx, p.sy);
+      ctx.fillStyle="#05070c"; ctx.font = "bold "+Math.max(8, r*1.0)+"px monospace"; 
+      ctx.globalAlpha = isDimmed ? 0.2 : 1.0; ctx.fillText("🔒", p.sx, p.sy);
     }
-    // labels: big nodes always, weeks when close, days on hover
+    
     const showLabel = n.type==="center" || n.type==="phase" || n.type==="dl" || n.type==="gate"
-                      || (n.type==="week" && p.s*zoom > .78) || n === hoverNode;
+                      || (n.type==="week" && p.s*zoom > .78) || n === hoverNode || n === draggedNode || (activeSpotlight && !isDimmed);
     if (showLabel){
-      const fs = n.type==="center" ? 13 : n.type==="phase" ? 12 : 10.5;
-      ctx.font = (n.type==="phase"||n.type==="center" ? "600 " : "") + fs + "px -apple-system,'Segoe UI',sans-serif";
-      ctx.fillStyle = n.status==="pending" ? "rgba(154,164,178,.9)" : "rgba(230,237,243,.95)";
-      ctx.fillText(n.label, p.sx, p.sy + r + fs*.9);
+      const fs = n.type==="center" ? 13 : n.type==="phase" ? 12 : 11;
+      ctx.font = (n.type==="phase"||n.type==="center" ? "700 " : "") + fs + "px 'Fira Code', monospace";
+      ctx.fillStyle = n.status==="pending" ? "#a6f9ff" : "#ffffff";
+      ctx.globalAlpha = isDimmed ? 0.2 : 1.0;
+      ctx.fillText(n.label, p.sx, p.sy + r + fs*1.1);
     }
+  }
+
+  for (const pd of pixieDust) {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(pd.x, pd.y, pd.size * pd.life, 0, Math.PI * 2);
+    ctx.fillStyle = pd.color; ctx.globalAlpha = pd.life; ctx.fill(); ctx.restore();
   }
 }
 
+/* ─────────────────────────── Smooth Lerp Cursor & Animation Loop ───────────────────────────── */
+let targetX = -100, targetY = -100;
+let cursorX = -100, cursorY = -100;
+
 function frame(t){
-  if (autoSpin && !dragging) rotY += .0016;
+  if (autoSpin && !dragging && !draggedNode) rotY += .0018;
+  
+  /* Smooth Lerp GPU Acceleration for Fairy Cursor */
+  cursorX += (targetX - cursorX) * 0.45;
+  cursorY += (targetY - cursorY) * 0.45;
+  fairyEl.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+
   physics(t); draw(t);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 
-/* ─────────────────────────── interaction ───────────────────────────── */
+/* ─────────────────────────── Interactive Controls ───────────────────────────── */
 let dragging=false, moved=false, px=0, py=0;
+const fairyEl = document.getElementById("fairy-cursor");
+const fairyBubble = document.getElementById("fairy-bubble");
+
+function toggleSpotlight(type) {
+  activeSpotlight = (activeSpotlight === type) ? null : type;
+  document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active-filter'));
+  if (activeSpotlight) {
+    document.getElementById(`btn-${type}`).classList.add('active-filter');
+    fairyBubble.innerText = `🔦 Spotlight Mode: Highlighting all [${type.toUpperCase()}] nodes!`;
+    fairyBubble.style.display = "block";
+  } else {
+    fairyBubble.innerText = "✨ Spotlight filter cleared. Network fully restored!";
+    setTimeout(() => { if (!hoverNode && !hoverLegendKey) fairyBubble.style.display = "none"; }, 1500);
+  }
+}
+
+function hoverLegend(type) {
+  hoverLegendKey = type;
+  fairyBubble.innerText = LEGEND_CONFIG[type].desc;
+  fairyBubble.style.display = "block";
+}
+function leaveLegend() {
+  hoverLegendKey = null;
+  if (!hoverNode && !activeSpotlight) fairyBubble.style.display = "none";
+}
+
 function nodeAt(mx,my){
   let best=null, bd=1e9;
   for (const n of nodes){
-    const p = project(n), r = Math.max(n.r*p.s + 6, 13);
+    const p = project(n), r = Math.max(n.r*p.s + 6, 14);
     const d = Math.hypot(mx-p.sx, my-p.sy);
     if (d < r && d < bd){ best=n; bd=d; }
   }
   return best;
 }
+
 cv.addEventListener("pointerdown", e=>{
-  dragging=true; moved=false; px=e.clientX; py=e.clientY;
-  cv.classList.add("dragging"); cv.setPointerCapture(e.pointerId);
+  moved=false; px=e.clientX; py=e.clientY;
+  cv.setPointerCapture(e.pointerId);
+  hoverNode = nodeAt(e.clientX, e.clientY);
+  if (hoverNode) { draggedNode = hoverNode; draggedNode.isDragging = true; }
+  else { dragging = true; }
 });
+
 cv.addEventListener("pointermove", e=>{
-  if (dragging){
-    const dx=e.clientX-px, dy=e.clientY-py;
-    if (Math.abs(dx)+Math.abs(dy) > 3) moved=true;
-    rotY += dx*.005; rotX += dy*.004;
-    rotX = Math.max(-1.2, Math.min(1.2, rotX));
-    px=e.clientX; py=e.clientY;
+  const dx = e.clientX - px, dy = e.clientY - py;
+  if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+
+  /* Update target coordinates for smooth rAF Lerp loop */
+  targetX = e.clientX; targetY = e.clientY;
+
+  if (Math.random() > 0.4) {
+    pixieDust.push({
+      x: e.clientX + (Math.random() - 0.5) * 10, y: e.clientY + (Math.random() - 0.5) * 10,
+      vx: (Math.random() - 0.5) * 1.2, vy: Math.random() * 1.2 + 0.4,
+      size: Math.random() * 2.5 + 1, life: 1.0,
+      color: Math.random() > 0.4 ? "#00f0ff" : "#ff3399"
+    });
+  }
+
+  if (draggedNode) {
+    const p = project(draggedNode), s = Math.max(0.1, p.s);
+    const cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
+    draggedNode.x += (dx/s) * cy + (dy/s) * sx * sy;
+    draggedNode.y += (dy/s) * cx;
+    draggedNode.z += (dx/s) * sy - (dy/s) * sx * cy;
+    draggedNode.vx = 0; draggedNode.vy = 0; draggedNode.vz = 0;
+  } else if (dragging) {
+    rotY += dx * .005; rotX += dy * .004;
+    rotX = Math.max(-1.3, Math.min(1.3, rotX));
   } else {
     hoverNode = nodeAt(e.clientX, e.clientY);
-    cv.style.cursor = hoverNode ? "pointer" : "grab";
-    if (hoverNode){
-      tip.style.display="block";
-      tip.style.left = Math.min(e.clientX+14, W-250)+"px";
-      tip.style.top  = (e.clientY+14)+"px";
-      tip.innerHTML = "<div class='t'>"+hoverNode.label+"</div><div class='s'>"
-                    + hoverNode.status + " · " + hoverNode.desc + "</div>";
-    } else tip.style.display="none";
+    if (hoverNode) {
+      fairyBubble.innerText = hoverNode.summary || `✨ Inspecting ${hoverNode.label}...`;
+      fairyBubble.style.display = "block";
+    } else if (!activeSpotlight && !hoverLegendKey) {
+      fairyBubble.style.display = "none";
+    }
   }
+  px = e.clientX; py = e.clientY;
 });
+
 cv.addEventListener("pointerup", e=>{
-  cv.classList.remove("dragging");
-  if (!moved){
+  if (draggedNode) { draggedNode.isDragging = false; draggedNode = null; }
+  else if (!moved) {
     const n = nodeAt(e.clientX, e.clientY);
     if (n) openPanel(n); else panel.style.display="none";
   }
-  dragging=false;
+  dragging = false;
 });
+
 cv.addEventListener("wheel", e=>{
   e.preventDefault();
-  zoom = Math.max(.45, Math.min(2.6, zoom * (e.deltaY<0 ? 1.09 : .92)));
+  zoom = Math.max(.4, Math.min(2.8, zoom * (e.deltaY<0 ? 1.1 : .9)));
 },{passive:false});
 
-const BADGE = {done:["✓ done","#12261a","#3fb950"], current:["▶ current","#231a33","#c9a8ff"],
-               pending:["… pending","#1a1f27","#9aa4b2"], locked:["🔒 locked","#161a20","#6e7681"]};
+const BADGE = {
+  done: ["✓ COMPLETED", "rgba(0, 255, 102, 0.15)", "#00ff66"],
+  current: ["▶ ACTIVE QUEST", "rgba(0, 240, 255, 0.15)", "#00f0ff"],
+  pending: ["… PENDING", "rgba(166, 249, 255, 0.15)", "#a6f9ff"],
+  locked: ["🔒 LOCKED", "rgba(226, 232, 240, 0.25)", "#e2e8f0"]
+};
+
 function openPanel(n){
   document.getElementById("pTitle").textContent = n.label;
   const b = BADGE[n.status], bEl = document.getElementById("pBadge");
-  bEl.textContent = b[0]; bEl.style.background=b[1]; bEl.style.color=b[2];
+  bEl.textContent = b[0]; bEl.style.background=b[1]; bEl.style.color=b[2]; bEl.style.border = `1px solid ${b[2]}`;
   document.getElementById("pDesc").textContent = n.desc;
   const a = document.getElementById("pLink");
-  a.href = n.link; a.textContent = "Open on GitHub ↗";
+  a.href = n.link;
   panel.style.display = "block";
 }
 
