@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>> ATHOI // ASCENT OF THE SHADOW MONARCH.graph</title>
+<title>> kise // ASCENT OF THE SHADOW MONARCH.graph</title>
 <style>
   :root {
     --bg: #05070c;
@@ -222,28 +222,32 @@ const REPO = "https://github.com/ChingangbamDpakAngom/Road-to-ML-foundation";
 const RAW  = "https://raw.githubusercontent.com/ChingangbamDpakAngom/Road-to-ML-foundation/main/PROGRESS.md";
 
 const PHASES = [
-  {id:"p1", name:"Python Core",      ring:"#00f0ff", weeks:[1]},
-  {id:"p2", name:"Data Stack",       ring:"#b829ff", weeks:[2,3,4]},
-  {id:"p3", name:"Math for ML",      ring:"#ffaa00", weeks:[5,6]},
-  {id:"p4", name:"Machine Learning", ring:"#ff3399", weeks:[7,8,9]},
-  {id:"p5", name:"Job-Ready",        ring:"#00ff66", weeks:[10,11]},
-  {id:"p6", name:"Bridge to DL",     ring:"#00f0ff", weeks:[12,13]},
+  {id:"p1", name:"Python Core",   ring:"#00f0ff", weeks:[1,2,3,4],     ship:"Expense Tracker CLI"},
+  {id:"p2", name:"Engineering",   ring:"#b829ff", weeks:[5,6,7,8],     ship:"Job Application Tracker API"},
+  {id:"p3", name:"Data",          ring:"#ffaa00", weeks:[9,10,11,12],  ship:"🏆 Capstone 1 · Job Skills Analysis"},
+  {id:"p4", name:"Math for ML",   ring:"#ff3399", weeks:[13,14],       ship:"Gradient descent from scratch"},
+  {id:"p5", name:"Classical ML",  ring:"#00ff66", weeks:[15,16,17,18], ship:"Skill Classifier"},
+  {id:"p6", name:"Deep Learning", ring:"#22d3ee", weeks:[19,20,21,22], ship:"PyTorch experiment"},
+  {id:"p7", name:"Applied AI",    ring:"#ffd700", weeks:[23,24,25,26], ship:"🏆 Capstone 2 · RAG / Career Copilot"},
 ];
 const WEEK_NAMES = {
-  1:"Python Sprint", 2:"NumPy", 3:"Pandas", 4:"Visualization · Capstone 1",
-  5:"Linear Algebra", 6:"Calculus + Probability", 7:"Regression", 8:"Classifiers",
-  9:"Unsupervised + Evaluation", 10:"SQL", 11:"Capstone 2 🏆", 12:"From-Scratch Neural Net",
-  13:"Interview Prep"
+  1:"Setup + core syntax", 2:"Collections + persistence", 3:"OOP + tests", 4:"Polish + release",
+  5:"FastAPI + schema", 6:"CRUD + validation", 7:"SQL + observability", 8:"CI + Docker",
+  9:"NumPy + Pandas intake", 10:"Cleaning pipeline", 11:"SQL + viz", 12:"🏆 Capstone 1 · EDA",
+  13:"Linear algebra", 14:"Calculus + probability",
+  15:"Regression + baselines", 16:"Models + CV", 17:"Metrics + tuning", 18:"Serve + mini-lab",
+  19:"Tensors + data", 20:"Training loop", 21:"Experiment", 22:"Evaluate + report",
+  23:"Scope + ingestion", 24:"Grounded pipeline", 25:"Eval + guardrails", 26:"🏆 Capstone 2 · RAG"
 };
 const DAY_NAMES = [
-  "Setup · variables · control flow", "Data structures + comprehensions",
-  "Functions & functional Python", "OOP — bank account system", "Decorators & generators",
-  "Files · exceptions · type hints", "Project: CLI Task Manager"
+  "Setup · venv · variables · strings", "Control flow",
+  "Functions & scope", "Collections as records", "Build tracker v0 · add + list",
+  "Validation + argparse CLI", "Review + weekly check-in"
 ];
-const GUIDE1 = REPO + "/blob/main/guides/week01_python_sprint.md";
+const GUIDE1 = REPO + "/blob/main/guides/week01_python_core.md";
 
 const progress = {weeks:{}, days:{}, currentWeek:1};
-for (let w=1; w<=13; w++) progress.weeks[w] = false;
+for (let w=1; w<=26; w++) progress.weeks[w] = false;
 for (let d=1; d<=7;  d++) progress.days[d]  = false;
 
 async function loadProgress(){
@@ -265,8 +269,11 @@ async function loadProgress(){
   applyStatus(); updateStats();
 }
 
+function gatePassed(){ for (let w=1; w<=18; w++) if (!progress.weeks[w]) return false; return true; }
+function weeksAllDone(){ for (let w=1; w<=26; w++) if (!progress.weeks[w]) return false; return true; }
 function weekStatus(w){
   if (progress.weeks[w]) return "done";
+  if (w > 18 && !gatePassed()) return "locked";
   if (w === progress.currentWeek) return "current";
   return "pending";
 }
@@ -277,6 +284,7 @@ function dayStatus(d){
 }
 function phaseStatus(p){
   if (p.weeks.every(w => progress.weeks[w])) return "done";
+  if (p.weeks[0] > 18 && !gatePassed()) return "locked";
   if (p.weeks.includes(progress.currentWeek)) return "current";
   return "pending";
 }
@@ -299,15 +307,15 @@ addNode({
 for (const p of PHASES){
   addNode({
     id:p.id, type:"phase", r:15, label:p.name, ring:p.ring,
-    desc:"Phase Nexus — Contains " + p.weeks.length + " specialized training week(s).",
-    summary:`⚡ Phase Hub: ${p.name}! Contains ${p.weeks.length} intensive training week(s) to master.`,
+    desc:`Phase Nexus — ${p.weeks.length} training week(s). Ships: ${p.ship}.`,
+    summary:`⚡ Phase Hub: ${p.name}! ${p.weeks.length} week(s) → ${p.ship}.`,
     link:REPO+"/blob/main/ROADMAP.md", status:"pending"
   });
-  addEdge("center", p.id, 170);
+  if (p.weeks[0] <= 18) addEdge("center", p.id, 170);   // pre-gate phases radiate from the nexus
   for (const w of p.weeks){
     addNode({
       id:"w"+w, type:"week", r:10, label:"W"+w+" · "+WEEK_NAMES[w],
-      desc:"Week "+w+" Architecture: "+WEEK_NAMES[w],
+      desc:"Week "+w+": "+WEEK_NAMES[w],
       summary:`📖 Week ${w} Quest: ${WEEK_NAMES[w]}. Click me to inspect the curriculum!`,
       link: w===1 ? GUIDE1 : REPO+"/blob/main/ROADMAP.md", status:"pending"
     });
@@ -324,35 +332,32 @@ for (let d=1; d<=7; d++){
   addEdge("w1", "d"+d, 48);
 }
 addNode({
-  id:"gate", type:"gate", r:12, label:"Readiness Gate",
-  desc:"8-parameter verification checkpoint. Complete to unlock neural network architectures.",
-  summary:"🛡️ The Readiness Gate! Pass all 8 core checkpoints here to unlock Deep Learning!",
-  link:REPO+"/blob/main/ROADMAP.md#-deep-learning-readiness-gate", status:"pending"
+  id:"gate", type:"gate", r:12, label:"🚪 DL Readiness Gate",
+  desc:"8-box verification checkpoint after Classical ML. Clear every box to unlock the Deep Learning + Applied AI phases.",
+  summary:"🚪 The DL Readiness Gate! Clear all 8 checkpoints to unlock Phase 6 (PyTorch) and Phase 7 (Applied AI)!",
+  link:REPO+"/blob/main/ROADMAP.md#-deep-learning-readiness-gate--kept-from-v2", status:"pending"
 });
-addEdge("w13","gate",95);
-addNode({
-  id:"dl", type:"dl", r:16, label:"🧠 Deep Learning",
-  desc:"PyTorch · Neural Architectures · Advanced AI systems. Currently locked behind Readiness Gate.",
-  summary:"🧠 Deep Learning Sanctuary! Highly advanced neural networks reside here. Unlock the gate first!",
-  link:REPO+"/blob/main/ROADMAP.md", status:"locked"
-});
-addEdge("gate","dl",115);
+addEdge("p5","gate",120);
+addEdge("w18","gate",95);
+addEdge("gate","p6",150);   // gate unlocks Deep Learning
+addEdge("p6","p7",190);     // Applied AI follows Deep Learning
 
 function applyStatus(){
   for (const p of PHASES) byId[p.id].status = phaseStatus(p);
-  for (let w=1; w<=13; w++) byId["w"+w].status = weekStatus(w);
+  for (let w=1; w<=26; w++) byId["w"+w].status = weekStatus(w);
   for (let d=1; d<=7;  d++) byId["d"+d].status = dayStatus(d);
-  const allWeeks = Object.values(progress.weeks).every(v=>v);
-  byId["gate"].status = allWeeks ? "current" : "pending";
-  byId["center"].status = allWeeks ? "done" : "current";
+  const gp = gatePassed(), allDone = weeksAllDone();
+  byId["gate"].status = allDone ? "done" : (gp ? "current" : "pending");
+  byId["center"].status = allDone ? "done" : "current";
 }
 function updateStats(){
   const wd = Object.values(progress.weeks).filter(v=>v).length;
   const dd = Object.values(progress.days).filter(v=>v).length;
-  const total = 13*7, doneUnits = wd*7 + (progress.weeks[1] ? 0 : dd);
-  document.getElementById("stW").textContent = wd + "/13";
+  let units = wd;
+  if (!progress.weeks[1]) units += dd/7;   // partial credit for Week-1 days in progress
+  document.getElementById("stW").textContent = wd + "/26";
   document.getElementById("stD").textContent = dd + "/7";
-  document.getElementById("stP").textContent = Math.round(100*doneUnits/total) + "%";
+  document.getElementById("stP").textContent = Math.round(100*units/26) + "%";
 }
 
 /* ─────────────────────────── 3D Engine & Optimizations ────────────────────────────── */
@@ -608,7 +613,7 @@ function draw(t){
       ctx.globalAlpha = isDimmed ? 0.2 : 1.0; ctx.fillText("🔒", p.sx, p.sy);
     }
     
-    const showLabel = n.type==="center" || n.type==="phase" || n.type==="dl" || n.type==="gate"
+    const showLabel = n.type==="center" || n.type==="phase" || n.type==="gate"
                       || (n.type==="week" && p.s*zoom > .78) || n === hoverNode || n === draggedNode || (activeSpotlight && !isDimmed);
     if (showLabel){
       const fs = n.type==="center" ? 13 : n.type==="phase" ? 12 : 11;

@@ -20,3 +20,8 @@ Thumbs.db
 
 # Local tooling
 .claude/
+.claude-flow/
+.obsidian/
+
+# Archives / scratch
+*.zip

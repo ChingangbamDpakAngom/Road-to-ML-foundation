@@ -8,21 +8,24 @@
 [![Quest Graph](https://img.shields.io/badge/🌌_EXPLORE_THE-LIVE_QUEST_GRAPH-a371f7?style=for-the-badge)](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white)
-![Matplotlib](https://img.shields.io/badge/Matplotlib-3776AB?style=flat-square&logo=matplotlib&logoColor=white)
 ![Scikit-Learn](https://img.shields.io/badge/Scikit_Learn-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
 
 > _"Arise." — The journey begins with a single `git push`._
 
 </div>
 
-A structured, gamified learning journey from core Python to Machine Learning
-engineering readiness. Every study day ends in a commit; every completed phase
-evolves the Shadow Monarch — from a dormant silhouette to the Ascended Monarch,
-at which point the **Deep Learning module unlocks**.
+A structured, gamified, **project-first** journey from core Python to AI/ML
+engineering readiness. You build **6 portfolio projects** — each a prerequisite for
+the next — while practising DSA and a professional Git/PR workflow *in parallel from
+Day 1*. Every study day ends in a commit; every completed phase evolves the Shadow
+Monarch — from a dormant silhouette to the **Ascended Monarch**.
 
 ---
 
@@ -30,32 +33,74 @@ at which point the **Deep Learning module unlocks**.
 
 | File | What it is |
 |------|------------|
-| **[ROADMAP.md](ROADMAP.md)** | The plan — 14 weeks, 6 phases, and the **Deep Learning Readiness Gate** that must pass before PyTorch |
+| **[ROADMAP.md](ROADMAP.md)** | The plan — **26 weeks, 7 phases, 6 projects**, and the **Deep Learning Readiness Gate** that must pass before PyTorch |
 | **[PROGRESS.md](PROGRESS.md)** | The tracker — tick a box every study day, current week marked 👉 |
-| **[guides/](guides/)** | Weekly study guides — the document to follow each day (currently: [Week 1 Python Sprint](guides/week01_python_sprint.md)) |
-| **[00_workspace_git/](00_workspace_git/README.md)** | 🧰 Module 0 — workspace & git/GitHub, practiced daily by shipping (no theory week) |
+| **[guides/](guides/)** | Weekly study guides — the document to follow each day (currently: [Week 1 · Python Core](guides/week01_python_core.md)) |
+| **[01_python_foundations/week01_theory.ipynb](01_python_foundations/week01_theory.ipynb)** | 📖 Week 1 theory & reading — topics + the "why"; you do the hands-on |
+| **[00_workspace_git/](00_workspace_git/README.md)** | 🧰 Module 0 — workspace & git/GitHub, practiced daily by shipping |
 | **[docs/evolution_stages.md](docs/evolution_stages.md)** | 🗡️ The character — full pixel-art evolution gallery |
-| **[🌌 Live Quest Graph](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)** | Interactive 3D node map of every task — colored live from PROGRESS.md ([source](docs/quest_graph.html)) |
+| **[🌌 Live Quest Graph](https://chingangbamdpakangom.github.io/Road-to-ML-foundation/)** | Interactive node map of every task — colored live from PROGRESS.md ([source](docs/quest_graph.html)) |
 
-**Daily rhythm:** study the day's topic → code every exercise yourself → answer
-the day's interview questions out loud → commit & push. The GitHub contribution
-graph is the heatmap.
+**Daily rhythm:** study the day's topic → code every exercise yourself → one DSA
+pattern problem → answer the interview questions out loud → commit & push. The GitHub
+contribution graph is the heatmap.
 
 ---
 
-## 🗺️ The 14-Week Plan (summary)
+## 🗺️ The 26-Week Plan
+
+```mermaid
+graph TD
+    subgraph A [Arc 1 — Foundations · Python & Engineering]
+        P1[Phase 1 · Python Core<br/>Wk 1–4 · syntax → functions → OOP → tests] --> S1[(Expense Tracker CLI)]
+        S1 --> P2[Phase 2 · Engineering<br/>Wk 5–8 · FastAPI · Pydantic · SQLite · CI · Docker]
+        P2 --> S2[(Job Application Tracker API)]
+    end
+
+    subgraph B [Arc 2 — Data & Math]
+        S2 --> P3[Phase 3 · Data<br/>Wk 9–12 · NumPy · Pandas · SQL · visualisation]
+        P3 --> S3[(🏆 Capstone 1 · Job Skills Analysis)]
+        S3 --> P4[Phase 4 · Math for ML<br/>Wk 13–14 · linear algebra · calculus · probability]
+        P4 --> S4[(Gradient descent from scratch)]
+    end
+
+    subgraph C [Arc 3 — Machine Learning]
+        S4 --> P5[Phase 5 · Classical ML<br/>Wk 15–18 · regression → trees → CV → error analysis]
+        P5 --> S5[(Skill Classifier + from-scratch mini-lab)]
+    end
+
+    S5 --> GATE{Deep Learning<br/>Readiness Gate}
+
+    subgraph D [Arc 4 — Deep Learning & Applied AI]
+        GATE -->|all 8 boxes checked| P6[Phase 6 · Deep Learning<br/>Wk 19–22 · PyTorch: tensors → autograd → training]
+        P6 --> S6[(PyTorch experiment)]
+        S6 --> P7[Phase 7 · Applied AI<br/>Wk 23–26 · RAG · retrieval · evaluation · deployment]
+        P7 --> S7[(🏆 Capstone 2 · RAG / Career Copilot)]
+    end
+
+    subgraph PAR [Parallel from Day 1 — cross-cutting habits]
+        DSA[DSA · NeetCode 150 patterns<br/>3 sessions/week]
+        WF[Professional Git/PR loop<br/>+ MLOps woven from Phase 5]
+    end
+
+    DSA -.-> P1
+    WF -.-> P2
+```
 
 | Phase | Weeks | Focus | Ships |
 |:-----:|:-----:|-------|-------|
-| 1 | 1 | 🐍 Python sprint (basics → OOP → decorators/generators → files) | CLI Task Manager |
-| 2 | 2–4 | 📊 NumPy · Pandas · Matplotlib/Seaborn | 🏆 Capstone 1: full EDA |
-| 3 | 5–6 | 📐 Math for ML — linear algebra, calculus, probability | Gradient descent from scratch |
-| 4 | 7–9 | 🤖 Scikit-Learn — regression, classifiers, clustering, pipelines | End-to-end ML pipeline |
-| 5 | 10–11 | 🧰 SQL + portfolio project | 🏆 Capstone 2: interview showpiece |
-| 6 | 12–13 | 🌉 Bridge to DL — from-scratch NN + interview prep | 2-layer neural net in NumPy |
+| 1 | 1–4 | 🐍 Python Core — syntax → functions → OOP → tests → CLI | Expense Tracker CLI |
+| 2 | 5–8 | ⚙️ Engineering — FastAPI, Pydantic, SQLite, CI, Docker | Job Application Tracker API |
+| 3 | 9–12 | 📊 Data — NumPy, Pandas, SQL, Matplotlib/Seaborn | 🏆 Capstone 1: Job Skills Analysis |
+| 4 | 13–14 | 📐 Math for ML — linear algebra, calculus, probability | Gradient descent from scratch |
+| 5 | 15–18 | 🤖 Classical ML — regression → trees → CV → error analysis | Skill Classifier (+ from-scratch mini-lab) |
+| 6 | 19–22 | 🧠 Deep Learning — PyTorch: tensors → autograd → training | Reproducible PyTorch experiment |
+| 7 | 23–26 | 🚀 Applied AI — RAG, retrieval, evaluation, **deployment** | 🏆 Capstone 2: RAG / Career Copilot |
 
-Full week-by-week detail, resources, and the readiness checklist live in
-**[ROADMAP.md](ROADMAP.md)**.
+**Parallel tracks (from Day 1):** 🧩 DSA (NeetCode 150 patterns, 3×/week) ·
+⚙️ Professional Git/PR loop (from Phase 2) · 🔧 MLOps — Docker, CI/CD, model cards,
+cost/latency (woven from Phase 5). Full week-by-week detail and the readiness
+checklist live in **[ROADMAP.md](ROADMAP.md)**.
 
 ---
 
@@ -67,12 +112,12 @@ Each completed phase transforms the character — see the
 | Stage | Name | Unlocks when | Current |
 |:-----:|------|--------------|:-------:|
 | 0 | 🔒 Dormant | Starting point | 👉 |
-| 1 | 🟦 Awakened | Python sprint complete | |
-| 2 | 🟣 Shadow Initiate | NumPy complete | |
-| 3 | 🟡 Shadow Knight | Pandas + Visualization complete | |
-| 4 | 🔴 Shadow Lord | Scikit-Learn complete | |
-| 5 | 👑 Shadow Monarch | Interview prep complete | |
-| 6 | 🟠 Ascended Monarch | Readiness Gate passed → **Deep Learning unlocked** | |
+| 1 | 🟦 Awakened | Phase 1 — Python Core complete (Expense Tracker CLI) | |
+| 2 | 🟣 Shadow Initiate | Phase 2 — Engineering complete (Job Tracker API) | |
+| 3 | 🟡 Shadow Knight | Phase 3 — Data complete (🏆 Capstone 1) | |
+| 4 | 🔴 Shadow Lord | Phases 4–5 — Math + Classical ML complete (Skill Classifier) | |
+| 5 | 👑 Shadow Monarch | Phase 6 — Deep Learning complete (**passed the DL Readiness Gate**) | |
+| 6 | 🟠 Ascended Monarch | Phase 7 — Applied AI capstone shipped → **job-ready** | |
 
 ---
 
@@ -80,28 +125,25 @@ Each completed phase transforms the character — see the
 
 ```
 Road-to-ML-foundation/
-├── ROADMAP.md                     ← the plan
+├── ROADMAP.md                     ← the plan (26 weeks, 7 phases)
 ├── PROGRESS.md                    ← the tracker
 ├── guides/                        ← weekly study guides (one added per week)
-│   └── week01_python_sprint.md
+│   └── week01_python_core.md
 ├── 00_workspace_git/              ← Module 0: git/GitHub by daily use
 ├── 01_python_foundations/
+│   ├── week01_theory.ipynb        ← 📖 Week 1 theory & reading (topics + the "why")
 │   ├── scratchpad.ipynb           ← free-experiment lab bench
-│   ├── 01_basics/                 ← Day 1 notebook
-│   ├── 02_data_structures/        ← Day 2 notebook
-│   ├── 03_functions_functional/   ← Day 3 notebook
-│   ├── 04_oop/                    ← Day 4 notebook
-│   ├── 05_decorators_generators/  ← Day 5 notebook
-│   ├── 06_files_exceptions/       ← Day 6 notebook
-│   └── 07_project_task_manager/   ← Day 7 project (.py)
+│   ├── 01_basics/                 ← your hands-on notebooks
+│   ├── 02_data_structures/  …     ← (map to Weeks 2–3 under v3)
+│   └── expense_tracker/           ← Phase 1 project — the Expense Tracker CLI
 ├── 04_interview_prep/
 │   └── python_qa.md               ← interview answers, written daily
 └── docs/
     └── evolution_stages.md        ← pixel-art gallery
 ```
 
-Folders `02_data_science/` and `03_machine_learning/` get created when their
-phases begin.
+Later phase folders (engineering API, data, ML, deep learning, applied AI) are
+created when their phases begin.
 
 ---
 
@@ -109,11 +151,14 @@ phases begin.
 
 ```bash
 git clone https://github.com/ChingangbamDpakAngom/Road-to-ML-foundation.git
-cd Road-to-ML-foundation
-conda create -n ml-foundations python=3.10 -y
-conda activate ml-foundations
-pip install numpy pandas matplotlib seaborn scikit-learn jupyter scipy mypy
+cd "Road-to-ML-foundation/01_python_foundations"
+python -m venv .venv
+source .venv/Scripts/activate          # Windows Git Bash · (macOS/Linux: source .venv/bin/activate)
+python -m pip install --upgrade pip pytest ruff
 ```
+
+Phase-specific libraries (NumPy, Pandas, FastAPI, scikit-learn, PyTorch, …) are
+installed at the start of each phase — one toolchain at a time, not all at once.
 
 ---
 
@@ -121,24 +166,26 @@ pip install numpy pandas matplotlib seaborn scikit-learn jupyter scipy mypy
 
 | Phase | Resource |
 |-------|----------|
-| Python | [Official tutorial](https://docs.python.org/3/tutorial/) + [Real Python](https://realpython.com/) |
-| Data stack | [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) (free) |
+| Python Core | [Official tutorial](https://docs.python.org/3/tutorial/) + [Real Python](https://realpython.com/) |
+| Engineering | [FastAPI docs](https://fastapi.tiangolo.com/) · [pytest](https://docs.pytest.org/) · [GitHub Actions](https://docs.github.com/actions) |
+| Data | [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) (free) · [SQLBolt](https://sqlbolt.com/) |
 | Math | [3Blue1Brown](https://www.youtube.com/@3blue1brown) (LinAlg + Calculus) · [StatQuest](https://www.youtube.com/@statquest) |
-| ML | Hands-On ML (Géron) ch. 1–9 + [scikit-learn user guide](https://scikit-learn.org/stable/user_guide.html) |
-| SQL | [SQLBolt](https://sqlbolt.com/) · LeetCode SQL |
-| DL (later) | PyTorch tutorials → Karpathy's *Zero to Hero* |
+| Classical ML | Hands-On ML (Géron) ch. 1–9 + [scikit-learn user guide](https://scikit-learn.org/stable/user_guide.html) |
+| Deep Learning | [PyTorch tutorials](https://docs.pytorch.org/tutorials/) → Karpathy's *Zero to Hero* |
+| Applied AI / MLOps | [Docker Get Started](https://docs.docker.com/get-started/) · [Google Model Cards](https://modelcards.withgoogle.com/about) |
+| DSA (all) | [NeetCode 150](https://neetcode.io/practice/practice/neetcode150) |
 
 ---
 
 ## 💼 Where This Leads
 
-Honest scope: this repo covers **classical ML foundations** — it does not cover
-deep learning, NLP, or LLMs (that's the next module, gated by the readiness
-checklist).
+This is a **project-first** track: you finish with 6 portfolio pieces, a deployed
+applied-AI capstone, a DSA habit, and a professional workflow — the profile junior
+UK/global AI/ML job ads actually screen for.
 
-| After completing this repo, apply for | Still locked (needs DL module) |
-|----------------------------------------|--------------------------------|
-| Data Analyst · Junior Data Scientist · Junior ML Engineer (classical) · Python Developer | Deep Learning / NLP / LLM / CV Engineer · MLOps Engineer |
+| After completing this repo, apply for | Honest scope |
+|----------------------------------------|--------------|
+| Junior ML/AI Engineer · Python Developer · Data Scientist/Analyst · MLOps-adjacent | Foundational depth across the full stack — **not** research-level DL, large-scale distributed training, or specialised CV/NLP. Those are the next mountain. |
 
 ---
 
